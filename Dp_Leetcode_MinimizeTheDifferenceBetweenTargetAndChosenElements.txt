@@ -1,0 +1,73 @@
+You are given an m x n integer matrix mat and an integer target.
+
+Choose one integer from each row in the matrix such that the absolute difference between target and the sum of the chosen elements is minimized.
+
+Return the minimum absolute difference.
+
+The absolute difference between two numbers a and b is the absolute value of a - b.
+
+ 
+
+Example 1:
+
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]], target = 13
+Output: 0
+Explanation: One possible choice is to:
+- Choose 1 from the first row.
+- Choose 5 from the second row.
+- Choose 7 from the third row.
+The sum of the chosen elements is 13, which equals the target, so the absolute difference is 0.
+
+Example 2:
+
+Input: mat = [[1],[2],[3]], target = 100
+Output: 94
+Explanation: The best possible choice is to:
+- Choose 1 from the first row.
+- Choose 2 from the second row.
+- Choose 3 from the third row.
+The sum of the chosen elements is 6, and the absolute difference is 94.
+
+Example 3:
+
+Input: mat = [[1,2,9,8,7]], target = 6
+Output: 1
+Explanation: The best choice is to choose 7 from the first row.
+The absolute difference is 1.
+
+ 
+
+Constraints:
+
+    m == mat.length
+    n == mat[i].length
+    1 <= m, n <= 70
+    1 <= mat[i][j] <= 70
+    1 <= target <= 800
+
+class Solution {
+    public int minimizeTheDifference(int[][] mat, int target) {
+        // since the value of the sum of all the elements added in the worst case won't exceed 4900 as val<=70
+        Integer[][] dp=new Integer[mat.length][49002];    
+        // start from the first row with value 0 and start the dp memo    
+        return getMinAbs(mat,dp,target,0,0);
+    }
+
+    public int getMinAbs(int[][] mat,Integer[][] dp,int target,int curIndex,int curVal){
+        // if selection of all the elements from the last row is completed then, consider that possibility/result
+        if(curIndex==mat.length){
+            return Math.abs(curVal-target);
+        }
+        // memo
+        if(dp[curIndex][curVal]!=null){
+            return dp[curIndex][curVal];
+        }
+        // go through every possible value in the current row and figure out the lowest possible absolute difference
+        int res=Integer.MAX_VALUE;
+        for(int j=0;j<mat[0].length;j++){
+            res=Math.min(res,getMinAbs(mat,dp,target,curIndex+1,curVal+mat[curIndex][j]));
+        }
+        // return the best possible difference for current row with the current sum
+        return dp[curIndex][curVal]=res;
+    }
+}
