@@ -1,0 +1,80 @@
+Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+
+ 
+
+Example 1:
+
+Input: n = 3
+Output: 5
+
+Example 2:
+
+Input: n = 1
+Output: 1
+
+ 
+
+Constraints:
+
+    1 <= n <= 19
+
+/*    
+Hope it will help you to understand :
+    
+    n = 0;     null   
+    
+    count[0] = 1
+    
+    
+    n = 1;      1       
+    
+    count[1] = 1 
+    
+    
+    n = 2;    1__       			 __2     
+    		      \					/                 
+    		     count[1]	   	count[1]	
+    
+    count[2] = 1 + 1 = 2
+    
+    
+    
+    n = 3;    1__				      __2__	                   __3
+    		      \		            /       \			      /		
+    		  count[2]		  count[1]    count[1]		count[2]
+    
+    count[3] = 2 + 1 + 2  = 5
+    
+    
+    
+    n = 4;    1__  					__2__					   ___3___                  
+    		      \				 /        \					  /		  \			
+    		  count[3]		 count[1]    count[2]		  count[2]   count[1]
+    
+                 __4				
+               /
+           count[3]   
+    
+    count[4] = 5 + 2 + 2 + 5 = 14     
+    
+
+And  so on...
+*/
+
+class Solution {
+    public int numTrees(int n) {
+        int[] noOfWays=new int[n+1];
+        noOfWays[0]=noOfWays[1]=1;
+
+        // logic to calculate unique no of bst's for the given number of nodes
+        for(int i=2;i<=n;i++){
+            // no of ways to calc unique bst's is to make sure each node acts as a root node
+            for(int j=1;j<=i;j++){
+                // left subtree*right subtree
+                noOfWays[i]+=noOfWays[j-1]*noOfWays[i-j];
+            }
+        }
+
+        return noOfWays[n];
+    }
+}
